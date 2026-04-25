@@ -8,8 +8,7 @@
     <title>Formulario</title>
 
     <body>
-        
-        <form action="/submit" method="post" class="campo_formulario">
+        <form id="registroForm" class="campo_formulario">
             <h1>Formulario de Registro</h1>
             <label for="name">Nombre:</label>
             <input type="text" id="name" name="name" required><br><br>
@@ -22,4 +21,24 @@
 
             <input type="submit" value="Registrar">
         </form>
+        <div id="mensaje"></div>
+        <script>
+        document.getElementById('registroForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('/api/guardar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombre, email, password })
+            });
+            const data = await response.json();
+            document.getElementById('mensaje').innerText = data.message || data.error;
+            if(response.ok) {
+                document.getElementById('registroForm').reset();
+            }
+        });
+        </script>
 </html>
